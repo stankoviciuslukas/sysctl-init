@@ -5,6 +5,15 @@
   roles:
     - role: ansible-sysctl
       vars:
+        kernel_modules:
+          - name: nf_conntrack
+          - name: 8021q
+
+        kernel_module_params:
+          - name: nf_conntrack
+            params:
+              - name: hashsize
+                value: "999"
         sysctl_settings:
           - name: net.netfilter.nf_conntrack_max
             value: 65536
