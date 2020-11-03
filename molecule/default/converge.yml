@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  roles:
+    - role: ansible-sysctl
+      vars:
+        sysctl_settings:
+          - name: net.netfilter.nf_conntrack_max
+            value: 65536
