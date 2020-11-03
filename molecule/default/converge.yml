@@ -1,0 +1,32 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  # pre_tasks:
+  #   - name: Update apt cache.
+  #     apt: update_cache=true cache_valid_time=300
+  #     when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic'
+
+  roles:
+    - role: ansible-sysctl
+      vars:
+        kernel_modules:
+          - name: nf_conntrack
+          - name: 8021q
+
+        kernel_module_params:
+          - name: nf_conntrack
+            params:
+              - name: hashsize
+                value: "999"
+
+        sysctl_settings:
+          - name: net.netfilter.nf_conntrack_max
+            value: 65536
+
+  # post_tasks:
+  #   - name: Ensure apt-cacher-ng is running.
+  #     wait_for:
+  #       port: "{{ apt_cacher_ng_port }}"
+  #     when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'bionic'

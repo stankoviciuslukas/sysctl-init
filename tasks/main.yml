@@ -1,0 +1,21 @@
+---
+- name: Load kernel modules.
+  modprobe:
+    name: "{{ item.name }}"
+  loop: "{{ kernel_modules }}"
+  when: "kernel_modules is defined"
+
+- name: Set kernel modules parameters.
+  modprobe:
+    name: "{{ item.0.name }}"
+    params: "{{ item.1.name }}={{ item.1.value }}"
+  with_subelements:
+    - "{{ kernel_module_params | selectattr('params', 'defined') | list }}"
+    - params
+
+- name: Set sysctl values
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  loop: "{{ sysctl_settings }}"
