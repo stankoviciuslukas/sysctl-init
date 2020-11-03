@@ -15,6 +15,7 @@ platforms:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /dev:/dev
       - /lib/modules:/lib/modules
+      - /usr/local/sbin:/usr/local/sbin
     privileged: true
     pre_build_image: true
 provisioner:
