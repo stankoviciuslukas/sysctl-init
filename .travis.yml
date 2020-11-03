@@ -2,6 +2,11 @@
 language: python
 services: docker
 
+addons:
+  apt:
+    packages:
+      - kmod
+
 env:
   global:
     - ROLE_NAME: ansible
