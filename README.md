@@ -1,8 +1,8 @@
-# Ansible Role: apt-cacher-ng
+# ansible-sysctl
 
-[![Build Status](https://travis-ci.com/paysera/ansible-apt-cacher-ng.svg?branch=master)](https://travis-ci.com/paysera/ansible-apt-cacher-ng)
+[![Build Status](https://travis-ci.com/paysera/ansible-sysctl?branch=master)](https://travis-ci.com/paysera/ansible-sysctl)
 
-An Ansible Role to install and configure apt-cacher-ng on Debian/Ubuntu
+Ansible role managing modprobe modules and sysctl values on Debian/Ubuntu platforms.
 
 ## Requirements
 
@@ -10,18 +10,30 @@ None.
 
 ## Role Variables
 
-Define value if provisioned machine is apt-cacher-ng server. By default machine provisioned as client.
+Define list of modules to load to kernel.
 
-    apt_cacher_ng_server: false
+```
+kernel_modules:
+  - name: nf_conntrack
+```
 
-Define apt-cacher-ng server IP. It will be used to configure apt proxy in client machines.
+If modules requires custom parameters role had additional section to define parameters. This section can be used without explicitly defining kernel_modules.
 
-    apt_cacher_ng_server_ip: "1.1.1.1"
+```
+kernel_module_params:
+  - name: nf_conntrack
+    params:
+      - name: hashsize
+        value: "2048"
+```
 
-Default values used for apt-cacher-ng config. You can specify which port and CacheDir to use for apt-cacher-ng.
+List of sysctl settings to enable in runtime.
 
-    apt_cacher_ng_port: 3142
-    apt_cacher_ng_cache_dir: /var/cache/apt-cacher-ng
+```
+sysctl_settings:
+  - name: net.netfilter.nf_conntrack_max
+    value: 65536
+```
 
 ## Dependencies
 
@@ -29,9 +41,25 @@ None.
 
 ## Example Playbook
 
-    - hosts: all
-      roles:
-        - ansible-apt-cacher-ng
+```
+- hosts: all
+    roles:
+    - ansible-sysctl
+    vars:
+    kernel_modules:
+        - name: nf_conntrack
+        - name: 8021q
+
+    kernel_module_params:
+        - name: nf_conntrack
+        params:
+            - name: hashsize
+            value: "1024"
+
+    sysctl_settings:
+        - name: net.netfilter.nf_conntrack_max
+        value: 65536
+```
 
 ## License
 
